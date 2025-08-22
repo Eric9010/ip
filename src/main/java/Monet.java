@@ -1,17 +1,28 @@
+import java.util.Scanner;
+
 public class Monet {
     public static void main(String[] args) {
         String chatbotName = "Monet";
-        String horizontalLine = "____________________________________________________________";
+        String divider = "--------------------------------------------------------------------------------------------";
 
-        System.out.println(horizontalLine);
         System.out.println(" Hello! I'm " + chatbotName);
         System.out.println(" What can I do for you?");
-        System.out.println(horizontalLine);
+        System.out.println(divider);
 
-        // This is where the main logic of the chatbot will go in future levels.
-        // For Level-0, we just print the exit message immediately.
+        Scanner in = new Scanner(System.in);
 
+        // Start of command loop that echoes inputs
+        while (true) {
+            String input = in.nextLine();
+            if (input.equals("bye")) {
+                break; // Exit the loop if user types "bye"
+            }
+            // Echo the user's command
+            System.out.println("  " + input);
+        }
+
+        // Farewell message
         System.out.println(" Bye. Hope to see you again soon!");
-        System.out.println(horizontalLine);
+
     }
 }
