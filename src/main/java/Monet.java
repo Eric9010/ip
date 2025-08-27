@@ -16,87 +16,86 @@ public class Monet {
         while (true) {
             try {
                 String input = in.nextLine();
-                String[] parts = input.split(" ", 2);
-                String command = parts[0];
+                Command command = Parser.parseCommand(input);
 
-                if (command.equals("bye")) {
+                if (command == Command.BYE) {
                     break;
-                } else if (command.equals("list")) {
-                    System.out.println(" Here are the tasks in your list:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        // ArrayList uses .get(index) to access elements
-                        System.out.println("  " + (i + 1) + "." + tasks.get(i));
-                    }
-                } else if (command.equals("mark") || command.equals("unmark") || command.equals("delete")) {
-                    if (parts.length < 2) {
-                        throw new MonetException("Please specify the task number to " + command + ".");
-                    }
-                    int taskIndex = Integer.parseInt(parts[1]) - 1;
+                }
 
-                    // Use .size() for ArrayList boundary check
-                    if (taskIndex < 0 || taskIndex >= tasks.size()) {
-                        throw new MonetException("Task number not found. Please provide a valid task number.");
+                switch (command) {
+                    case LIST:
+                        System.out.println(" Here are the tasks in your list:");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println("  " + (i + 1) + "." + tasks.get(i));
+                        }
+                        break;
+
+                    case MARK:
+                    case UNMARK: {
+                        int taskIndex = Parser.parseIndex(input, tasks.size());
+                        Task task = tasks.get(taskIndex);
+                        if (command == Command.MARK) {
+                            task.markAsDone();
+                            System.out.println(" Nice! I've marked this task as done:");
+                        } else {
+                            task.unmarkAsDone();
+                            System.out.println(" OK, I've marked this task as not done yet:");
+                        }
+                        System.out.println("   " + task);
+                        break;
                     }
 
-                    if (command.equals("delete")) {
-                        // ArrayList's .remove() method handles shifting elements automatically
+                    case DELETE: {
+                        int taskIndex = Parser.parseIndex(input, tasks.size());
                         Task removedTask = tasks.remove(taskIndex);
                         System.out.println(" Noted. I've removed this task:");
                         System.out.println("   " + removedTask);
                         System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
-                    } else if (command.equals("mark")) {
-                        tasks.get(taskIndex).markAsDone();
-                        System.out.println(" Nice! I've marked this task as done:");
-                        System.out.println("   " + tasks.get(taskIndex));
-                    } else { // unmark
-                        tasks.get(taskIndex).unmarkAsDone();
-                        System.out.println(" OK, I've marked this task as not done yet:");
-                        System.out.println("   " + tasks.get(taskIndex));
-                    }
-                } else if (command.equals("todo") || command.equals("deadline") || command.equals("event")) {
-                    Task newTask = null;
-
-                    if (command.equals("todo")) {
-                        if (parts.length < 2) {
-                            throw new MonetException("The description for a todo cannot be empty.");
-                        }
-                        newTask = new Todo(parts[1]);
-                    } else if (command.equals("deadline")) {
-                        if (parts.length < 2 || !parts[1].contains(" /by ")) {
-                            throw new MonetException("Invalid deadline format. Use: deadline <desc> /by <date>");
-                        }
-                        String[] deadlineParts = parts[1].split(" /by ");
-                        newTask = new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim());
-                    } else if (command.equals("event")) {
-                        if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
-                            throw new MonetException("Invalid event format. Use: event <desc> /from <date> /to <date>");
-                        }
-                        String[] eventParts = parts[1].split(" /from ");
-                        String[] timeParts = eventParts[1].split(" /to ");
-                        newTask = new Event(eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim());
+                        break;
                     }
 
-                    // Use .add() to add to the ArrayList
-                    tasks.add(newTask);
-                    System.out.println(" Got it. I've added this task:");
-                    System.out.println("   " + newTask);
-                    // Use .size() to get the current count
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    case TODO: {
+                        String description = Parser.parseTodo(input);
+                        Todo newTodo = new Todo(description);
+                        tasks.add(newTodo);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newTodo);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    }
 
-                } else {
-                    throw new MonetException("I don't know what that means. Please check your input!");
+                    case DEADLINE: {
+                        String[] deadlineDetails = Parser.parseDeadline(input);
+                        Deadline newDeadline = new Deadline(deadlineDetails[0], deadlineDetails[1]);
+                        tasks.add(newDeadline);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newDeadline);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    }
+
+                    case EVENT: {
+                        String[] eventDetails = Parser.parseEvent(input);
+                        Event newEvent = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
+                        tasks.add(newEvent);
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + newEvent);
+                        System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                        break;
+                    }
+
+                    case UNKNOWN:
+                    default:
+                        throw new MonetException("I don't know what that means. Please check your input!");
                 }
+
             } catch (MonetException e) {
                 System.out.println("Sorry! " + e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("Sorry! Please enter a valid number for the task index.");
-            } catch (Exception e) {
-                System.out.println("An unexpected error occurred: " + e.getMessage());
             } finally {
                 System.out.println(divider);
             }
         }
-        // Farewell message
+
         System.out.println(" Bye. Hope to see you again soon!");
     }
 }
