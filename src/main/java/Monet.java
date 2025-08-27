@@ -4,7 +4,7 @@ import java.util.Scanner;
 public class Monet {
     public static void main(String[] args) {
         String chatbotName = "Monet";
-        String divider = "____________________________________________________________________________________________";
+        String divider = "____________________________________________________________";
         ArrayList<Task> tasks = new ArrayList<>();
 
         System.out.println(" Hello! I'm " + chatbotName);
@@ -18,8 +18,6 @@ public class Monet {
                 String input = in.nextLine();
                 String[] parts = input.split(" ", 2);
                 String command = parts[0];
-
-                System.out.println(divider);
 
                 if (command.equals("bye")) {
                     break;
