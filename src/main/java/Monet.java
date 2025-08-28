@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,10 +12,10 @@ public class Monet {
     private static ArrayList<Task> tasks;
 
     public static void main(String[] args) {
+        tasks = loadFile(); // Load tasks from the file at startup.
+
         String chatbotName = "Monet";
         String divider = "____________________________________________________________";
-
-        tasks = loadFile(); // Load tasks from the file at startup.
 
         System.out.println(" Hello! I'm " + chatbotName);
         System.out.println(" What can I do for you?");
@@ -121,7 +122,7 @@ public class Monet {
         for (Task task : tasks) {
             // Save the direct toString() output, e.g., "[T][X] read book"
             // This is easier to parse back than the numbered list format.
-            fw.write(task.toString() + System.lineSeparator());
+            fw.write(task.toFileString() + System.lineSeparator());
         }
         fw.close();
     }
@@ -129,67 +130,71 @@ public class Monet {
     private static ArrayList<Task> loadFile() {
         File file = new File(FILE_PATH);
         ArrayList<Task> loadedTasks = new ArrayList<>();
-
-        // Handle case where file does not exist gracefully.
         if (!file.exists()) {
             return loadedTasks;
         }
-
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
+                // --- FIX 1: IGNORE EMPTY LINES ---
+                // If the line is blank, skip it and move to the next one.
+                if (line.trim().isEmpty()) {
+                    continue;
+                }
                 Task task = parseTaskFromFileString(line);
+                // The parser might return null for corrupted lines, so we check for that.
                 if (task != null) {
                     loadedTasks.add(task);
                 }
             }
         } catch (FileNotFoundException e) {
-            // This case is handled by the file.exists() check, but it's good practice.
             System.out.println("File not found, will be created on first save.");
         } catch (MonetException e) {
             System.out.println("Error parsing file: " + e.getMessage() + ". Starting with an empty task list.");
-            return new ArrayList<>(); // Return empty list if file is corrupt.
+            return new ArrayList<>();
         }
         return loadedTasks;
     }
 
     private static Task parseTaskFromFileString(String line) throws MonetException {
-        // Example formats:
-        // [T][ ] read book
-        // [D][X] return book (by: Sunday)
-        // [E][ ] project meeting (from: Mon 2pm to: 4pm)
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            System.out.println("Warning: Corrupted line in data file will be ignored: " + line);
+            return null;
+        }
 
-        char type = line.charAt(1);
-        boolean isDone = line.charAt(4) == 'X';
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1");
+        String description = parts[2];
         Task task;
 
-        String content = line.substring(7); // Get the main content part of the task string
-
         switch (type) {
-            case 'T':
-                task = new Todo(content);
+            case "T":
+                task = new Todo(description);
                 break;
-            case 'D':
-                // Split "return book (by: Sunday)" into "return book" and "Sunday)"
-                String[] deadlineParts = content.split(" \\(by: ");
-                String deadlineDesc = deadlineParts[0];
-                // Remove the closing parenthesis
-                String by = deadlineParts[1].substring(0, deadlineParts[1].length() - 1);
-                task = new Deadline(deadlineDesc, by);
+            case "D":
+                // Add specific validation for deadline format
+                if (parts.length < 4) {
+                    System.out.println("Warning: Corrupted deadline task in data file will be ignored: " + line);
+                    return null;
+                }
+                LocalDateTime by = LocalDateTime.parse(parts[3]);
+                task = new Deadline(description, by);
                 break;
-            case 'E':
-                // Split "project meeting (from: Mon 2pm to: 4pm)" into "project meeting" and "Mon 2pm to: 4pm)"
-                String[] eventParts = content.split(" \\(from: ");
-                String eventDesc = eventParts[0];
-                // Split "Mon 2pm to: 4pm)" into "Mon 2pm" and "4pm"
-                String[] timeParts = eventParts[1].split(" to: ");
-                String from = timeParts[0];
-                // Remove the closing parenthesis
-                String to = timeParts[1].substring(0, timeParts[1].length() - 1);
-                task = new Event(eventDesc, from, to);
+            case "E":
+                // Add specific validation for event format
+                if (parts.length < 5) {
+                    System.out.println("Warning: Corrupted event task in data file will be ignored: " + line);
+                    return null;
+                }
+                LocalDateTime from = LocalDateTime.parse(parts[3]);
+                LocalDateTime to = LocalDateTime.parse(parts[4]);
+                task = new Event(description, from, to);
                 break;
             default:
-                throw new MonetException("Unknown task type in file: " + type);
+                // If the type is unknown, it's also a corrupted line.
+                System.out.println("Warning: Unknown task type in data file will be ignored: " + line);
+                return null;
         }
 
         if (isDone) {
