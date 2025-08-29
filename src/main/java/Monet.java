@@ -17,8 +17,8 @@ public class Monet {
         String chatbotName = "Monet";
         String divider = "____________________________________________________________";
 
-        System.out.println(" Hello! I'm " + chatbotName);
-        System.out.println(" What can I do for you?");
+        System.out.println("Hello! I'm " + chatbotName);
+        System.out.println("What can I do for you?");
         System.out.println(divider);
 
         Scanner in = new Scanner(System.in);
@@ -34,7 +34,7 @@ public class Monet {
 
                 switch (command) {
                 case LIST:
-                    System.out.println(" Here are the tasks in your list:");
+                    System.out.println("Here are the tasks in your list:");
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println("  " + (i + 1) + "." + tasks.get(i));
                     }
@@ -46,10 +46,10 @@ public class Monet {
                     Task task = tasks.get(taskIndex);
                     if (command == Command.MARK) {
                         task.markAsDone();
-                        System.out.println(" Nice! I've marked this task as done:");
+                        System.out.println("Nice! I've marked this task as done:");
                     } else {
                         task.unmarkAsDone();
-                        System.out.println(" OK, I've marked this task as not done yet:");
+                        System.out.println("OK, I've marked this task as not done yet:");
                     }
                     System.out.println("   " + task);
                     saveFile(tasks); // Save changes to the file
@@ -59,9 +59,9 @@ public class Monet {
                 case DELETE: {
                     int taskIndex = Parser.parseIndex(input, tasks.size());
                     Task removedTask = tasks.remove(taskIndex);
-                    System.out.println(" Noted. I've removed this task:");
+                    System.out.println("Noted. I've removed this task:");
                     System.out.println("   " + removedTask);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     saveFile(tasks); // Save changes to the file
                     break;
                 }
@@ -70,9 +70,9 @@ public class Monet {
                     String description = Parser.parseTodo(input);
                     Todo newTodo = new Todo(description);
                     tasks.add(newTodo);
-                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("Got it. I've added this task:");
                     System.out.println("   " + newTodo);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     saveFile(tasks); // Save changes to the file
                     break;
                 }
@@ -81,9 +81,9 @@ public class Monet {
                     String[] deadlineDetails = Parser.parseDeadline(input);
                     Deadline newDeadline = new Deadline(deadlineDetails[0], deadlineDetails[1]);
                     tasks.add(newDeadline);
-                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("Got it. I've added this task:");
                     System.out.println("   " + newDeadline);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     saveFile(tasks); // Save changes to the file
                     break;
                 }
@@ -92,9 +92,9 @@ public class Monet {
                     String[] eventDetails = Parser.parseEvent(input);
                     Event newEvent = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
                     tasks.add(newEvent);
-                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("Got it. I've added this task:");
                     System.out.println("   " + newEvent);
-                    System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("Now you have " + tasks.size() + " tasks in the list.");
                     saveFile(tasks); // Save changes to the file
                     break;
                 }
@@ -110,15 +110,8 @@ public class Monet {
                 System.out.println(divider);
             }
         }
-        System.out.println(" Bye. Hope to see you again soon!");
+        System.out.println("Bye. Hope to see you again soon!");
     }
-
-    /**
-     *
-     *
-     * @param tasks
-     * @throws IOException
-     */
 
     private static void saveFile(ArrayList<Task> tasks) throws IOException {
         File file = new File(FILE_PATH);
@@ -157,7 +150,7 @@ public class Monet {
         } catch (FileNotFoundException e) {
             System.out.println("File not found, will be created on first save.");
         } catch (MonetException e) {
-            System.out.println("Error parsing file: " + e.getMessage() + ". Starting with an empty task list.");
+            System.out.println("Error parsing file: " + e.getMessage() + ". Using an empty task list instead.");
             return new ArrayList<>();
         }
         return loadedTasks;
