@@ -1,4 +1,4 @@
-# Monet User Guide
+# monet.Monet User Guide
 
 // Update the title above to match the actual product name
 

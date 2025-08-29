@@ -1,3 +1,5 @@
+package monet;
+
 import java.util.Scanner;
 
 public class Ui {
@@ -12,7 +14,7 @@ public class Ui {
     }
 
     public void showWelcome() {
-        System.out.println("Hello! I'm Monet");
+        System.out.println("Hello! I'm monet.Monet");
         System.out.println("What can I do for you?");
         divider();
     }

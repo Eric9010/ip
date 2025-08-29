@@ -1,3 +1,5 @@
+package monet;
+
 import java.io.IOException;
 
 public class Monet {

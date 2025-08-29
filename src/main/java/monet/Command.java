@@ -1,3 +1,5 @@
+package monet;
+
 public enum Command {
     LIST,
     MARK,

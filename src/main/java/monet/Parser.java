@@ -1,6 +1,8 @@
+package monet;
+
 public class Parser {
 
-    // Parses the user's full input string to determine the command type based on Command enum.
+    // Parses the user's full input string to determine the command type based on monet.Command enum.
     public static Command parseCommand(String fullInput) {
         String commandWord = fullInput.split(" ")[0].toLowerCase();
 
@@ -78,7 +80,7 @@ public class Parser {
         try {
             int index = Integer.parseInt(parts[1].trim()) - 1; // Convert to 0-based index
             if (index < 0 || index >= listSize) {
-                throw new MonetException("Task number not found. Please provide a valid task number.");
+                throw new MonetException("monet.Task number not found. Please provide a valid task number.");
             }
             return index;
         } catch (NumberFormatException e) {
