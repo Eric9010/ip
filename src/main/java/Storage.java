@@ -13,11 +13,11 @@ public class Storage {
         this.filePath = filePath;
     }
 
-    public ArrayList<Task> load() {
+    public ArrayList<Task> load() throws MonetException{
         File file = new File(filePath);
         ArrayList<Task> loadedTasks = new ArrayList<>();
         if (!file.exists()) {
-            return loadedTasks;
+            return loadedTasks; // Return empty list if no file exists
         }
         try (Scanner scanner = new Scanner(file)) {
             while (scanner.hasNext()) {
@@ -32,9 +32,6 @@ public class Storage {
             }
         } catch (FileNotFoundException e) {
             System.out.println("File not found, will be created on first save.");
-        } catch (MonetException e) {
-            System.out.println("Error parsing file: " + e.getMessage() + ". Starting with an empty task list.");
-            return new ArrayList<>();
         }
         return loadedTasks;
     }
