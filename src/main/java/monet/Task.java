@@ -30,5 +30,4 @@ public abstract class Task {
      * Returns a machine-readable string representation of the task for saving to a file.
      */
     public abstract String toFileString();
-
 }

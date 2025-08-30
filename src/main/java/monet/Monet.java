@@ -87,8 +87,6 @@ public class Monet {
         storage.save(tasks.getTasks());
     }
 
-
-
     private void handleMarkUnmark(Command command, String fullCommand) throws MonetException, IOException {
         int index = Parser.parseIndex(fullCommand, tasks.getSize());
         Task task = tasks.getTask(index);
