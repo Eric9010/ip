@@ -40,7 +40,7 @@ public class Monet {
                 ui.divider();
                 Command command = Parser.parseCommand(fullCommand);
 
-                // How each command is handled.
+                // Switch case for different commands.
                 switch (command) {
                     case BYE:
                         isExit = true;
@@ -99,7 +99,7 @@ public class Monet {
                 newTask = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
                 break;
             default:
-                return; // Should not happen
+                return;
         }
         tasks.addTask(newTask); // Execute the action: Add the task to the list.
         ui.showTaskAdded(newTask, tasks.getSize()); // Show UI confirmation.
