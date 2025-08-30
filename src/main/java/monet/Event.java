@@ -4,13 +4,26 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a task that is an event with a start and end time. It is a subclass of Task.
+ */
 public class Event extends Task {
     protected LocalDateTime from;
     protected LocalDateTime to;
 
+    // Defines the expected format for user date/time input.
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    // Defines the desired format for displaying the date/time to the user.
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
 
+    /**
+     * Constructs an Event task from user input.
+     *
+     * @param description The description of the event.
+     * @param fromString The start date/time string.
+     * @param toString The end date/time string.
+     * @throws MonetException If any date/time string is in an invalid format.
+     */
     public Event(String description, String fromString, String toString) throws MonetException {
         super(description);
         try {
@@ -21,6 +34,13 @@ public class Event extends Task {
         }
     }
 
+    /**
+     * Constructs an Event task when loading from the data file.
+     *
+     * @param description The description of the event.
+     * @param from The start time as a pre-parsed LocalDateTime object.
+     * @param to The end time as a pre-parsed LocalDateTime object.
+     */
     public Event(String description, LocalDateTime from, LocalDateTime to) {
         super(description);
         this.from = from;
