@@ -42,27 +42,27 @@ public class Monet {
 
                 // How each command is handled.
                 switch (command) {
-                    case BYE:
-                        isExit = true;
-                        ui.showGoodbye();
-                        break;
-                    case LIST:
-                        ui.showTaskList(tasks);
-                        break;
-                    case MARK:
-                    case UNMARK:
-                        handleMarkUnmark(command, fullCommand);
-                        break;
-                    case DELETE:
-                        handleDelete(fullCommand);
-                        break;
-                    case TODO:
-                    case DEADLINE:
-                    case EVENT:
-                        handleAddTask(command, fullCommand);
-                        break;
-                    default:
-                        throw new MonetException("I don't know what that means. Please check your input!");
+                case BYE:
+                    isExit = true;
+                    ui.showGoodbye();
+                    break;
+                case LIST:
+                    ui.showTaskList(tasks);
+                    break;
+                case MARK:
+                case UNMARK:
+                    handleMarkUnmark(command, fullCommand);
+                    break;
+                case DELETE:
+                    handleDelete(fullCommand);
+                    break;
+                case TODO:
+                case DEADLINE:
+                case EVENT:
+                    handleAddTask(command, fullCommand);
+                    break;
+                default:
+                    throw new MonetException("I don't know what that means. Please check your input!");
                 }
             } catch (MonetException | IOException e) {
                 // Catches both application-specific and file-related errors.
@@ -87,19 +87,19 @@ public class Monet {
 
         // Parse the user input to create the correct task type.
         switch (command) {
-            case TODO:
-                newTask = new Todo(Parser.parseTodo(fullCommand));
-                break;
-            case DEADLINE:
-                String[] deadlineDetails = Parser.parseDeadline(fullCommand);
-                newTask = new Deadline(deadlineDetails[0], deadlineDetails[1]);
-                break;
-            case EVENT:
-                String[] eventDetails = Parser.parseEvent(fullCommand);
-                newTask = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
-                break;
-            default:
-                return; // Should not happen
+        case TODO:
+            newTask = new Todo(Parser.parseTodo(fullCommand));
+            break;
+        case DEADLINE:
+            String[] deadlineDetails = Parser.parseDeadline(fullCommand);
+            newTask = new Deadline(deadlineDetails[0], deadlineDetails[1]);
+            break;
+        case EVENT:
+            String[] eventDetails = Parser.parseEvent(fullCommand);
+            newTask = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
+            break;
+        default:
+            return; // Should not happen
         }
         tasks.addTask(newTask); // Execute the action: Add the task to the list.
         ui.showTaskAdded(newTask, tasks.getSize()); // Show UI confirmation.

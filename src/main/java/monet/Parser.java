@@ -15,24 +15,24 @@ public class Parser {
         String commandWord = fullInput.split(" ")[0].toLowerCase();
 
         switch (commandWord) {
-            case "list":
-                return Command.LIST;
-            case "mark":
-                return Command.MARK;
-            case "unmark":
-                return Command.UNMARK;
-            case "delete":
-                return Command.DELETE;
-            case "todo":
-                return Command.TODO;
-            case "deadline":
-                return Command.DEADLINE;
-            case "event":
-                return Command.EVENT;
-            case "bye":
-                return Command.BYE;
-            default:
-                return Command.UNKNOWN;
+        case "list":
+            return Command.LIST;
+        case "mark":
+            return Command.MARK;
+        case "unmark":
+            return Command.UNMARK;
+        case "delete":
+            return Command.DELETE;
+        case "todo":
+            return Command.TODO;
+        case "deadline":
+            return Command.DEADLINE;
+        case "event":
+            return Command.EVENT;
+        case "bye":
+            return Command.BYE;
+        default:
+            return Command.UNKNOWN;
         }
     }
 
