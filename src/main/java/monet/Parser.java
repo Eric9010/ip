@@ -31,6 +31,8 @@ public class Parser {
             return Command.EVENT;
         case "bye":
             return Command.BYE;
+        case "find":
+            return Command.FIND;
         default:
             return Command.UNKNOWN;
         }
@@ -104,6 +106,23 @@ public class Parser {
         return new String[]{eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim()};
     }
 
+    /**
+     * Parses the keyword for a "find" command.
+     * Expected format: "find <keyword>"
+     *
+     * @param fullInput The full user input string.
+     * @return The keyword to search for.
+     * @throws MonetException If the keyword is missing.
+     */
+    public static String parseFind(String fullInput) throws MonetException {
+        String[] parts = fullInput.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new MonetException("Please enter a keyword to find.");
+        }
+        return parts[1].trim();
+    }
+
+    // Parses the task index from commands like "mark", "unmark", and "delete"
     /**
      * Parses the task index from commands like "mark", "unmark", and "delete".
      *

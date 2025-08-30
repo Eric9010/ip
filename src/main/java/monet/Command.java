@@ -12,5 +12,6 @@ public enum Command {
     DEADLINE,
     EVENT,
     BYE,
+    FIND,
     UNKNOWN // Represents an invalid command
 }
