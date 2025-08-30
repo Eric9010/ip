@@ -40,7 +40,7 @@ public class Monet {
                 ui.divider();
                 Command command = Parser.parseCommand(fullCommand);
 
-                // How each command is handled.
+                // Main logic for commands using methods defined below.
                 switch (command) {
                 case BYE:
                     isExit = true;
