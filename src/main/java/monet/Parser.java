@@ -7,24 +7,26 @@ public class Parser {
         String commandWord = fullInput.split(" ")[0].toLowerCase();
 
         switch (commandWord) {
-            case "list":
-                return Command.LIST;
-            case "mark":
-                return Command.MARK;
-            case "unmark":
-                return Command.UNMARK;
-            case "delete":
-                return Command.DELETE;
-            case "todo":
-                return Command.TODO;
-            case "deadline":
-                return Command.DEADLINE;
-            case "event":
-                return Command.EVENT;
-            case "bye":
-                return Command.BYE;
-            default:
-                return Command.UNKNOWN;
+        case "list":
+            return Command.LIST;
+        case "mark":
+            return Command.MARK;
+        case "unmark":
+            return Command.UNMARK;
+        case "delete":
+            return Command.DELETE;
+        case "todo":
+            return Command.TODO;
+        case "deadline":
+            return Command.DEADLINE;
+        case "event":
+            return Command.EVENT;
+        case "bye":
+            return Command.BYE;
+        case "find":
+            return Command.FIND;
+        default:
+            return Command.UNKNOWN;
         }
     }
 
@@ -69,6 +71,22 @@ public class Parser {
         }
 
         return new String[]{eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim()};
+    }
+
+    /**
+     * Parses the keyword for a "find" command.
+     * Expected format: "find <keyword>"
+     *
+     * @param fullInput The full user input string.
+     * @return The keyword to search for.
+     * @throws MonetException If the keyword is missing.
+     */
+    public static String parseFind(String fullInput) throws MonetException {
+        String[] parts = fullInput.split(" ", 2);
+        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+            throw new MonetException("Please enter a keyword to find.");
+        }
+        return parts[1].trim();
     }
 
     // Parses the task index from commands like "mark", "unmark", and "delete"

@@ -28,27 +28,30 @@ public class Monet {
                 Command command = Parser.parseCommand(fullCommand);
 
                 switch (command) {
-                    case BYE:
-                        isExit = true;
-                        ui.showGoodbye();
-                        break;
-                    case LIST:
-                        ui.showTaskList(tasks);
-                        break;
-                    case MARK:
-                    case UNMARK:
-                        handleMarkUnmark(command, fullCommand);
-                        break;
-                    case DELETE:
-                        handleDelete(fullCommand);
-                        break;
-                    case TODO:
-                    case DEADLINE:
-                    case EVENT:
-                        handleAddTask(command, fullCommand);
-                        break;
-                    default:
-                        throw new MonetException("I don't know what that means. Please check your input!");
+                case BYE:
+                    isExit = true;
+                    ui.showGoodbye();
+                    break;
+                case LIST:
+                    ui.showTaskList(tasks);
+                    break;
+                case MARK:
+                case UNMARK:
+                    handleMarkUnmark(command, fullCommand);
+                    break;
+                case DELETE:
+                    handleDelete(fullCommand);
+                    break;
+                case TODO:
+                case DEADLINE:
+                case EVENT:
+                    handleAddTask(command, fullCommand);
+                    break;
+                case FIND:
+                    handleFind(fullCommand);
+                    break;
+                default:
+                    throw new MonetException("I don't know what that means. Please check your input!");
                 }
             } catch (MonetException | IOException e) {
                 ui.showError(e.getMessage());
@@ -87,8 +90,6 @@ public class Monet {
         storage.save(tasks.getTasks());
     }
 
-
-
     private void handleMarkUnmark(Command command, String fullCommand) throws MonetException, IOException {
         int index = Parser.parseIndex(fullCommand, tasks.getSize());
         Task task = tasks.getTask(index);
@@ -100,6 +101,19 @@ public class Monet {
             ui.showTaskUnmarked(task);
         }
         storage.save(tasks.getTasks());
+    }
+
+    /**
+     * Parses the user input for a keyword, finds matching tasks, and displays them.
+     * This command does not modify the task list, so it does not save to the file.
+     *
+     * @param fullCommand The full user input string (e.g., "find book").
+     * @throws MonetException If the keyword is missing from the input.
+     */
+    private void handleFind(String fullCommand) throws MonetException {
+        String keyword = Parser.parseFind(fullCommand); // Parse the input to get the search keyword.
+        TaskList foundTasks = tasks.findTasks(keyword); // Execute the search logic using the TaskList.
+        ui.showFoundTasks(foundTasks); // Display the results using the UI.
     }
 
     public static void main(String[] args) {

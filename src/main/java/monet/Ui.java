@@ -64,5 +64,20 @@ public class Ui {
         System.out.println("   " + task);
     }
 
-
+    /**
+     * Prints the list of tasks found by a search.
+     * Displays a special message if no tasks are found.
+     *
+     * @param tasks The TaskList containing the tasks to be displayed.
+     */
+    public void showFoundTasks(TaskList tasks) {
+        if (tasks.getSize() == 0) {
+            System.out.println(" No tasks matching your keyword were found.");
+            return;
+        }
+        System.out.println(" Here are the matching tasks in your list:");
+        for (int i = 0; i < tasks.getSize(); i++) {
+            System.out.println("  " + (i + 1) + "." + tasks.getTask(i));
+        }
+    }
 }
