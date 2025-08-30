@@ -4,23 +4,42 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a task with a deadline. It is a subclass of Task.
+ */
 public class Deadline extends Task {
     protected LocalDateTime by;
 
-    // A formatter to parse the user's input, e.g., "2025-12-02 1800"
+    // Defines the expected format for user date/time input.
     private static final DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-    // A formatter to display the date in a user-friendly way
+    // Defines the desired format for displaying the date/time to the user.
     private static final DateTimeFormatter OUTPUT_FORMATTER = DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a");
 
+    /**
+     * Constructs a Deadline task from user input.
+     * Parses the date string into a LocalDateTime object.
+     *
+     * @param description The description of the deadline task.
+     * @param byString The date/time string for the deadline.
+     * @throws MonetException If the date/time string is in an invalid format.
+     */
     public Deadline(String description, String byString) throws MonetException {
         super(description);
         try {
+            // Attempt to parse the user-provided date string.
             this.by = LocalDateTime.parse(byString.trim(), INPUT_FORMATTER);
         } catch (DateTimeParseException e) {
+            // If parsing fails, throw a custom exception with a relevant message.
             throw new MonetException("Invalid date format for deadline. Please use 'yyyy-MM-dd HHmm'.");
         }
     }
 
+    /**
+     * Constructs a Deadline task when loading from the data file.
+     *
+     * @param description The description of the deadline task.
+     * @param by A pre-parsed LocalDateTime object.
+     */
     public Deadline(String description, LocalDateTime by) {
         super(description);
         this.by = by;
@@ -28,12 +47,13 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
+        // Formats the LocalDateTime object into a user-friendly string for display.
         return "[D]" + super.toString() + " (by: " + by.format(OUTPUT_FORMATTER) + ")";
     }
 
     @Override
     public String toFileString() {
-        // Saves the date in standard ISO format, e.g., "2025-12-02T18:00"
+        // Converts the task to a machine-readable string for saving to file.
         return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
     }
 }
