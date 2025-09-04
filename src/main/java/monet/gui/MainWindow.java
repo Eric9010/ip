@@ -24,29 +24,29 @@ public class MainWindow extends AnchorPane {
 
     private Monet monet;
 
-    // TODO: Replace with your own images in the resources folder
     private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
     private Image monetImage = new Image(this.getClass().getResourceAsStream("/images/monet.png"));
 
     /**
-     * Initializes the controller. Binds the scroll pane to the dialog container's height.
-     * Displays the welcome message.
+     * Initializes the controller.
+     * Binds the scroll pane to the dialog container's height.
      */
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-        // Show the welcome message on startup
-        dialogContainer.getChildren().add(
-                DialogBox.getMonetDialog(Monet.getWelcomeMessage(), monetImage)
-        );
+        // The welcome message will be shown after the monet instance is set.
     }
 
     /**
      * Sets the Monet instance for this controller.
+     * Shows welcome message.
      * @param m The Monet instance.
      */
     public void setMonet(Monet m) {
         monet = m;
+        dialogContainer.getChildren().add(
+                DialogBox.getMonetDialog(monet.getWelcomeMessage(), monetImage)
+        );
     }
 
     /**

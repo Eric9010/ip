@@ -3,8 +3,8 @@ package monet;
 import java.util.Scanner;
 
 /**
- * Handles all user interface interactions. This includes printing messages to the console
- * and reading user input.
+ * Handles the formatting of messages to be displayed to the user.
+ * Now decoupled from the console and instead returns strings for GUI use.
  */
 public class Ui {
     private final Scanner scanner;
@@ -18,119 +18,106 @@ public class Ui {
     }
 
     /**
-     * Reads the next full line of input from the user.
-     * @return The user's input string.
+     * Returns the welcome message for the chatbot.
+     * @return A welcome string.
      */
-    public String readCommand() {
-        return scanner.nextLine();
+    public String getWelcomeMessage() {
+        return "Hello! I'm Monet\nWhat can I do for you?";
     }
 
     /**
-     * Prints the welcome message when the chatbot starts.
+     * Returns the goodbye message for the chatbot.
+     * @return A goodbye string.
      */
-    public void showWelcome() {
-        System.out.println("Hello! I'm monet.Monet");
-        System.out.println("What can I do for you?");
-        divider();
+    public String getGoodbyeMessage() {
+        return "Bye. Hope to see you again soon!";
     }
 
     /**
-     * Prints the goodbye message when the chatbot exits.
+     * Returns a formatted error message.
+     * @param message The error message content.
+     * @return A formatted error string.
      */
-    public void showGoodbye() {
-        System.out.println("Bye. Hope to see you again soon!");
+    public String getErrorMessage(String message) {
+        return "Sorry! " + message;
     }
 
     /**
-     * Prints an error message.
-     *
-     * @param message The error message to be displayed.
+     * Returns a formatted string representing the list of tasks.
+     * @param tasks The TaskList to be displayed.
+     * @return A formatted string of the tasks.
      */
-    public void showError(String message) {
-        System.out.println("Sorry! " + message);
-    }
-
-    /**
-     * Prints a divider for visual separation.
-     */
-    public void divider() {
-        System.out.println("____________________________________________________________");
-    }
-
-    /**
-     * Prints the list of tasks to the user.
-     *
-     * @param tasks The TaskList containing the tasks to be displayed.
-     */
-    public void showTaskList(TaskList tasks) {
+    public String getTaskListMessage(TaskList tasks) {
         if (tasks.getSize() == 0) {
-            System.out.println("Your task list is empty. Add some tasks!");
-            return;
+            return "Your task list is empty. Add some tasks!";
         }
-        System.out.println("Here are the tasks in your list:");
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
         for (int i = 0; i < tasks.getSize(); i++) {
-            System.out.println("  " + (i + 1) + "." + tasks.getTask(i));
+            // Append a newline character for each task except the last one.
+            sb.append("  ").append(i + 1).append(".").append(tasks.getTask(i).toString());
+            if (i < tasks.getSize() - 1) {
+                sb.append("\n");
+            }
         }
+        return sb.toString();
     }
 
     /**
-     * Prints a confirmation message after a task has been successfully added.
-     *
+     * Returns a formatted string for a newly added task.
      * @param task The task that was added.
-     * @param taskCount The total number of tasks in the list now.
+     * @param taskCount The new total number of tasks.
+     * @return A formatted confirmation string.
      */
-    public void showTaskAdded(Task task, int taskCount) {
-        System.out.println("Got it. I've added this task:");
-        System.out.println("   " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+    public String getTaskAddedMessage(Task task, int taskCount) {
+        return String.format("Got it. I've added this task:\n   %s\nNow you have %d tasks in the list.",
+                task, taskCount);
     }
 
     /**
-     * Prints a confirmation message after a task has been deleted.
-     *
+     * Returns a formatted string for a deleted task.
      * @param task The task that was deleted.
-     * @param taskCount The total number of tasks remaining in the list.
+     * @param taskCount The new total number of tasks.
+     * @return A formatted confirmation string.
      */
-    public void showTaskDeleted(Task task, int taskCount) {
-        System.out.println("Noted. I've removed this task:");
-        System.out.println("   " + task);
-        System.out.println("Now you have " + taskCount + " tasks in the list.");
+    public String getTaskDeletedMessage(Task task, int taskCount) {
+        return String.format("Noted. I've removed this task:\n   %s\nNow you have %d tasks in the list.",
+                task, taskCount);
     }
 
     /**
-     * Prints a confirmation message after a task has been marked as done.
-     *
+     * Returns a formatted string for a task marked as done.
      * @param task The task that was marked.
+     * @return A formatted confirmation string.
      */
-    public void showTaskMarked(Task task) {
-        System.out.println("Nice! I've marked this task as done:");
-        System.out.println("   " + task);
+    public String getTaskMarkedMessage(Task task) {
+        return "Nice! I've marked this task as done:\n   " + task;
     }
 
     /**
-     * Prints a confirmation message after a task has been marked as not done.
-     *
+     * Returns a formatted string for a task marked as not done.
      * @param task The task that was unmarked.
+     * @return A formatted confirmation string.
      */
-    public void showTaskUnmarked(Task task) {
-        System.out.println("OK, I've marked this task as not done yet:");
-        System.out.println("   " + task);
+    public String getTaskUnmarkedMessage(Task task) {
+        return "OK, I've marked this task as not done yet:\n   " + task;
     }
 
     /**
-     * Prints the list of tasks found by a search.
-     * Displays a special message if no tasks are found.
-     *
-     * @param tasks The TaskList containing the tasks to be displayed.
+     * Returns a formatted string for the results of a find command.
+     * @param tasks The TaskList of found tasks.
+     * @return A formatted string of the search results.
      */
-    public void showFoundTasks(TaskList tasks) {
+    public String getFoundTasksMessage(TaskList tasks) {
         if (tasks.getSize() == 0) {
-            System.out.println(" No tasks matching your keyword were found.");
-            return;
+            return "No tasks matching your keyword were found.";
         }
-        System.out.println(" Here are the matching tasks in your list:");
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
         for (int i = 0; i < tasks.getSize(); i++) {
-            System.out.println("  " + (i + 1) + "." + tasks.getTask(i));
+            sb.append("  ").append(i + 1).append(".").append(tasks.getTask(i).toString());
+            if (i < tasks.getSize() - 1) {
+                sb.append("\n");
+            }
         }
+        return sb.toString();
     }
 }
