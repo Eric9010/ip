@@ -29,7 +29,7 @@ public class Storage {
      * @return An ArrayList of tasks loaded from the file.
      * @throws MonetException if the file contains corrupted data.
      */
-    public ArrayList<Task> load() throws MonetException{
+    public ArrayList<Task> load() throws MonetException {
         // Create a File object from the given path to interact with the file system.
         File file = new File(filePath);
         ArrayList<Task> loadedTasks = new ArrayList<>();
@@ -97,32 +97,32 @@ public class Storage {
         Task task;
 
         switch (type) {
-            case "T":
-                task = new Todo(description);
-                break;
-            case "D":
-                // Add specific validation for deadline format.
-                if (parts.length < 4) {
-                    System.out.println("Warning: Corrupted deadline task in data file will be ignored: " + line);
-                    return null;
-                }
-                LocalDateTime by = LocalDateTime.parse(parts[3]);
-                task = new Deadline(description, by);
-                break;
-            case "E":
-                // Add specific validation for event format.
-                if (parts.length < 5) {
-                    System.out.println("Warning: Corrupted event task in data file will be ignored: " + line);
-                    return null;
-                }
-                LocalDateTime from = LocalDateTime.parse(parts[3]);
-                LocalDateTime to = LocalDateTime.parse(parts[4]);
-                task = new Event(description, from, to);
-                break;
-            default:
-                // If the type is unknown, it's also a corrupted line.
-                System.out.println("Warning: Unknown task type in data file will be ignored: " + line);
+        case "T":
+            task = new Todo(description);
+            break;
+        case "D":
+            // Add specific validation for deadline format.
+            if (parts.length < 4) {
+                System.out.println("Warning: Corrupted deadline task in data file will be ignored: " + line);
                 return null;
+            }
+            LocalDateTime by = LocalDateTime.parse(parts[3]);
+            task = new Deadline(description, by);
+            break;
+        case "E":
+            // Add specific validation for event format.
+            if (parts.length < 5) {
+                System.out.println("Warning: Corrupted event task in data file will be ignored: " + line);
+                return null;
+            }
+            LocalDateTime from = LocalDateTime.parse(parts[3]);
+            LocalDateTime to = LocalDateTime.parse(parts[4]);
+            task = new Event(description, from, to);
+            break;
+        default:
+            // If the type is unknown, it's also a corrupted line.
+            System.out.println("Warning: Unknown task type in data file will be ignored: " + line);
+            return null;
         }
 
         if (isDone) {

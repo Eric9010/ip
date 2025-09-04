@@ -53,7 +53,7 @@ public class Ui {
     /**
      * Prints a divider for visual separation.
      */
-    public void divider(){
+    public void divider() {
         System.out.println("____________________________________________________________");
     }
 
