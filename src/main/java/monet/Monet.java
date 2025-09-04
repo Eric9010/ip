@@ -17,7 +17,7 @@ public class Monet {
      *
      * @param filePath The path to the file where tasks are stored.
      */
-    public Monet(String filePath){
+    public Monet(String filePath) {
         ui = new Ui();
         storage = new Storage(filePath);
         try {
