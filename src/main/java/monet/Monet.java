@@ -3,13 +3,13 @@ package monet;
 import java.io.IOException;
 
 /**
- * Combines the different components: Ui, Storage, Parser, and TaskList.
- * Main class for the Monet chatbot application.
+ * The main class for the Monet chatbot application.
+ * This class now supports both a command-line interface and a GUI interface.
  */
 public class Monet {
+
     private final Storage storage;
     private TaskList tasks;
-    private final Ui ui;
 
     /**
      * Constructs a new Monet application instance.
@@ -18,77 +18,69 @@ public class Monet {
      * @param filePath The path to the file where tasks are stored.
      */
     public Monet(String filePath) {
-        ui = new Ui();
         storage = new Storage(filePath);
         try {
-            tasks = new TaskList(storage.load()); // Load tasks from the storage file at startup.
+            tasks = new TaskList(storage.load());
         } catch (MonetException e) {
-            ui.showError("Failed to load tasks: " + e.getMessage());
-            tasks = new TaskList(); // Start with an empty task list if loading fails.
+            tasks = new TaskList();
         }
     }
 
     /**
-     * Runs the main application loop, processing user commands until the exit command is given.
+     * Returns the welcome message for the chatbot.
+     * @return A welcome string.
      */
-    public void run() {
-        ui.showWelcome();
-        boolean isExit = false;
-        while (!isExit) {
-            try {
-                String fullCommand = ui.readCommand();
-                ui.divider();
-                Command command = Parser.parseCommand(fullCommand);
-
-                // Switch case for different commands.
-                switch (command) {
-                case BYE:
-                    isExit = true;
-                    ui.showGoodbye();
-                    break;
-                case LIST:
-                    ui.showTaskList(tasks);
-                    break;
-                case MARK:
-                case UNMARK:
-                    handleMarkUnmark(command, fullCommand);
-                    break;
-                case DELETE:
-                    handleDelete(fullCommand);
-                    break;
-                case TODO:
-                case DEADLINE:
-                case EVENT:
-                    handleAddTask(command, fullCommand);
-                    break;
-                case FIND:
-                    handleFind(fullCommand);
-                    break;
-                default:
-                    throw new MonetException("I don't know what that means. Please check your input!");
-                }
-            } catch (MonetException | IOException e) {
-                // Catches both application-specific and file-related errors.
-                ui.showError(e.getMessage());
-            } finally {
-                ui.divider();
-            }
-        }
+    public static String getWelcomeMessage() {
+        return "Hello! I'm Monet\nWhat can I do for you?";
     }
 
     /**
-     * Parses the user input for a new task, adds it to the task list,
-     * shows a confirmation to the user, and saves the updated list to the file.
+     * Processes user input and returns the chatbot's response as a string.
+     * This is the main entry point for the GUI.
      *
-     * @param command The type of task to add (TODO, DEADLINE, or EVENT).
-     * @param fullCommand The full user input string.
-     * @throws MonetException If the user input is in an invalid format.
-     * @throws IOException If there is an error saving the tasks to the file.
+     * @param input The user's input string.
+     * @return The chatbot's response string.
      */
-    private void handleAddTask(Command command, String fullCommand) throws MonetException, IOException {
-        Task newTask;
+    public String getResponse(String input) {
+        try {
+            Command command = Parser.parseCommand(input);
+            switch (command) {
+            case BYE:
+                return "Bye. Hope to see you again soon!";
+            case LIST:
+                return handleList();
+            case MARK:
+            case UNMARK:
+                return handleMarkUnmark(command, input);
+            case DELETE:
+                return handleDelete(input);
+            case TODO:
+            case DEADLINE:
+            case EVENT:
+                return handleAddTask(command, input);
+            case FIND:
+                return handleFind(input);
+            default:
+                return "I'm sorry, I don't know what that means :-(";
+            }
+        } catch (MonetException | IOException e) {
+            return "Whoops! " + e.getMessage();
+        }
+    }
 
-        // Parse the user input to create the correct task type.
+    private String handleList() {
+        if (tasks.getSize() == 0) {
+            return "Your task list is empty. Add some tasks!";
+        }
+        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
+        for (int i = 0; i < tasks.getSize(); i++) {
+            sb.append("  ").append(i + 1).append(".").append(tasks.getTask(i).toString()).append("\n");
+        }
+        return sb.toString().trim();
+    }
+
+    private String handleAddTask(Command command, String fullCommand) throws MonetException, IOException {
+        Task newTask;
         switch (command) {
         case TODO:
             newTask = new Todo(Parser.parseTodo(fullCommand));
@@ -102,69 +94,47 @@ public class Monet {
             newTask = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
             break;
         default:
-            return; // Should not happen
+            return "";
         }
-        tasks.addTask(newTask); // Execute the action: Add the task to the list.
-        ui.showTaskAdded(newTask, tasks.getSize()); // Show UI confirmation.
-        storage.save(tasks.getTasks()); // Save the updated list to disk.
+        tasks.addTask(newTask);
+        storage.save(tasks.getTasks());
+        return String.format("Got it. I've added this task:\n   %s\nNow you have %d tasks in the list.",
+                newTask, tasks.getSize());
     }
 
-    /**
-     * Parses the user input for a task index to delete, removes the task,
-     * shows a confirmation, and saves the changes.
-     *
-     * @param fullCommand The full user input string (e.g., "delete 2").
-     * @throws MonetException If the user input is in an invalid format.
-     * @throws IOException If there is an error saving the tasks to the file.
-     */
-    private void handleDelete(String fullCommand) throws MonetException, IOException {
+    private String handleDelete(String fullCommand) throws MonetException, IOException {
         int index = Parser.parseIndex(fullCommand, tasks.getSize());
         Task deletedTask = tasks.deleteTask(index);
-        ui.showTaskDeleted(deletedTask, tasks.getSize());
         storage.save(tasks.getTasks());
+        return String.format("Noted. I've removed this task:\n   %s\nNow you have %d tasks in the list.",
+                deletedTask, tasks.getSize());
     }
 
-    /**
-     * Parses the user input for a task index to mark or unmark, updates the task's status,
-     * shows a confirmation, and saves the changes.
-     *
-     * @param command The action to perform (MARK or UNMARK).
-     * @param fullCommand The full user input string (e.g., "mark 1").
-     * @throws MonetException If the user input is in an invalid format.
-     * @throws IOException If there is an error saving the tasks to the file.
-     */
-    private void handleMarkUnmark(Command command, String fullCommand) throws MonetException, IOException {
+    private String handleMarkUnmark(Command command, String fullCommand) throws MonetException, IOException {
         int index = Parser.parseIndex(fullCommand, tasks.getSize());
         Task task = tasks.getTask(index);
+        String response;
         if (command == Command.MARK) {
             task.markAsDone();
-            ui.showTaskMarked(task);
+            response = "Nice! I've marked this task as done:\n   " + task;
         } else {
             task.unmarkAsDone();
-            ui.showTaskUnmarked(task);
+            response = "OK, I've marked this task as not done yet:\n   " + task;
         }
         storage.save(tasks.getTasks());
+        return response;
     }
 
-    /**
-     * Parses the user input for a keyword, finds matching tasks, and displays them.
-     * This command does not modify the task list, so it does not save to the file.
-     *
-     * @param fullCommand The full user input string (e.g., "find book").
-     * @throws MonetException If the keyword is missing from the input.
-     */
-    private void handleFind(String fullCommand) throws MonetException {
-        String keyword = Parser.parseFind(fullCommand); // Parse the input to get the search keyword.
-        TaskList foundTasks = tasks.findTasks(keyword); // Execute the search logic using the TaskList.
-        ui.showFoundTasks(foundTasks); // Display the results using the UI.
-    }
-
-    /**
-     * Creates an instance of Monet and starts the run loop.
-     *
-     * @param args Command line arguments (not used).
-     */
-    public static void main(String[] args) {
-        new Monet("./data/monet.txt").run();
+    private String handleFind(String fullCommand) throws MonetException {
+        String keyword = Parser.parseFind(fullCommand);
+        TaskList foundTasks = tasks.findTasks(keyword);
+        if (foundTasks.getSize() == 0) {
+            return "No tasks matching your keyword were found.";
+        }
+        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+        for (int i = 0; i < foundTasks.getSize(); i++) {
+            sb.append("  ").append(i + 1).append(".").append(foundTasks.getTask(i).toString()).append("\n");
+        }
+        return sb.toString().trim();
     }
 }
