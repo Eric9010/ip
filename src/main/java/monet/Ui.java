@@ -18,11 +18,35 @@ public class Ui {
     }
 
     /**
+     * Formats multiple lines of text into a single, newline-separated string.
+     * Utility method that makes use of varargs.
+     *
+     * @param messages A variable number of strings to be joined.
+     * @return A single formatted string.
+     */
+    private String formatMessages(String... messages) {
+        // Inside the method, 'messages' is treated as a String array (String[]).
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < messages.length; i++) {
+            sb.append(messages[i]);
+            // Append a newline after each message except the last one.
+            if (i < messages.length - 1) {
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
      * Returns the welcome message for the chatbot.
      * @return A welcome string.
      */
     public String getWelcomeMessage() {
-        return "Hello! I'm Monet\nWhat can I do for you?";
+        // Refactored: Uses the varargs helper for cleaner code.
+        return formatMessages(
+                "Hello! I'm Monet",
+                "What can I do for you?"
+        );
     }
 
     /**
@@ -69,8 +93,11 @@ public class Ui {
      * @return A formatted confirmation string.
      */
     public String getTaskAddedMessage(Task task, int taskCount) {
-        return String.format("Got it. I've added this task:\n   %s\nNow you have %d tasks in the list.",
-                task, taskCount);
+        return formatMessages(
+                "Got it. I've added this task:",
+                "   " + task,
+                "Now you have " + taskCount + " tasks in the list."
+        );
     }
 
     /**
@@ -80,8 +107,11 @@ public class Ui {
      * @return A formatted confirmation string.
      */
     public String getTaskDeletedMessage(Task task, int taskCount) {
-        return String.format("Noted. I've removed this task:\n   %s\nNow you have %d tasks in the list.",
-                task, taskCount);
+        return formatMessages(
+                "Noted. I've removed this task:",
+                "   " + task,
+                "Now you have " + taskCount + " tasks in the list."
+        );
     }
 
     /**
@@ -90,7 +120,10 @@ public class Ui {
      * @return A formatted confirmation string.
      */
     public String getTaskMarkedMessage(Task task) {
-        return "Nice! I've marked this task as done:\n   " + task;
+        return formatMessages(
+                "Nice! I've marked this task as done:",
+                "   " + task
+        );
     }
 
     /**
@@ -99,7 +132,10 @@ public class Ui {
      * @return A formatted confirmation string.
      */
     public String getTaskUnmarkedMessage(Task task) {
-        return "OK, I've marked this task as not done yet:\n   " + task;
+        return formatMessages(
+                "OK, I've marked this task as not done yet:",
+                "   " + task
+        );
     }
 
     /**
