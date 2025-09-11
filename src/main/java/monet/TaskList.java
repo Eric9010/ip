@@ -1,6 +1,7 @@
 package monet;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Contains the task list and provides operations to manipulate it.
@@ -59,22 +60,17 @@ public class TaskList {
 
     /**
      * Finds and returns a list of tasks that contain the given keyword in their description.
-     * The search is case-sensitive.
+     * Uses Java Streams.
      *
      * @param keyword The keyword to search for within task descriptions.
      * @return A new TaskList containing only the matching tasks.
      */
     public TaskList findTasks(String keyword) {
-        ArrayList<Task> foundTasksList = new ArrayList<>();
-
-        // Iterate through every task in the list.
-        for (Task task : this.tasks) {
-            // Check if the task's description contains the keyword.
-            if (task.getDescription().contains(keyword)) {
-                foundTasksList.add(task);
-            }
-        }
-        // Return a new TaskList composed of the found tasks.
+        // Convert the list to a stream, filter based on the condition, and collect the results into a new list.
+        ArrayList<Task> foundTasksList = this.tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
         return new TaskList(foundTasksList);
     }
+
 }
