@@ -86,8 +86,10 @@ public class Storage {
      */
     private Task parseTaskFromFileString(String line) throws MonetException {
         String[] parts = line.split(" \\| ");
+        String warning = "Warning: Corrupted line in data file will be ignored: ";
+
         if (parts.length < 3) {
-            System.out.println("Warning: Corrupted line in data file will be ignored: " + line);
+            System.out.println(warning + line);
             return null;
         }
 
@@ -106,7 +108,7 @@ public class Storage {
         case "D":
             // Add specific validation for deadline format.
             if (parts.length < 4) {
-                System.out.println("Warning: Corrupted deadline task in data file will be ignored: " + line);
+                System.out.println(warning + line);
                 return null;
             }
             LocalDateTime by = LocalDateTime.parse(parts[3]);
@@ -115,7 +117,7 @@ public class Storage {
         case "E":
             // Add specific validation for event format.
             if (parts.length < 5) {
-                System.out.println("Warning: Corrupted event task in data file will be ignored: " + line);
+                System.out.println(warning + line);
                 return null;
             }
             LocalDateTime from = LocalDateTime.parse(parts[3]);
@@ -124,7 +126,7 @@ public class Storage {
             break;
         default:
             // If the type is unknown, it's also a corrupted line.
-            System.out.println("Warning: Unknown task type in data file will be ignored: " + line);
+            System.out.println(warning + line);
             return null;
         }
 
