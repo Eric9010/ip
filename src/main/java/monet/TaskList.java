@@ -54,6 +54,8 @@ public class TaskList {
      * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= size()).
      */
     public Task deleteTask(int index) {
+        // We assert that the index is valid. This should always be true.
+        assert index >= 0 && index < this.tasks.size() : "Task index is out of bounds";
         return this.tasks.remove(index);
     }
 

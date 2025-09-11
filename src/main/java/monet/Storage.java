@@ -96,6 +96,9 @@ public class Storage {
         String description = parts[2];
         Task task;
 
+        // Use assert to validate the acceptable task types
+        assert type.equals("T") || type.equals("D") || type.equals("E") : "Unknown task type in file";
+
         switch (type) {
         case "T":
             task = new Todo(description);
