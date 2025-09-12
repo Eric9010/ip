@@ -1,5 +1,7 @@
 package monet;
 
+import javafx.util.Pair;
+
 /**
  * Deals with making sense of the user command.
  * Contains methods to parse various types of commands and their arguments.
@@ -33,66 +35,104 @@ public class Parser {
             return Command.BYE;
         case "find":
             return Command.FIND;
+        case "priority": // NEW: Handle the priority command
+            return Command.PRIORITY;
         default:
             return Command.UNKNOWN;
         }
     }
 
     /**
+     * A private helper method to find and extract the priority flag from a command's content.
+     *
+     * @param content The part of the user command after the main command word.
+     * @return A Pair containing the content with the priority flag removed, and the parsed Priority.
+     * @throws MonetException If the priority level is not a valid number.
+     */
+    private static Pair<String, Priority> extractPriority(String content) throws MonetException {
+        // Splits the content by the "/p" flag.
+        String[] parts = content.split(" /p ");
+        if (parts.length > 1) {
+            // Priority flag exists
+            String remainingContent = parts[0].trim();
+            try {
+                int level = Integer.parseInt(parts[1].trim());
+                return new Pair<>(remainingContent, Priority.of(level));
+            } catch (NumberFormatException e) {
+                throw new MonetException("Priority level must be a number (1, 2, or 3).");
+            }
+        } else {
+            // No priority flag, return the original content and default priority
+            return new Pair<>(content, Priority.MEDIUM);
+        }
+    }
+
+    /**
      * Parses the arguments for a "todo" command.
-     * Expected format: "todo <description>"
+     * Expected format: "to do [description] /p [level]"
      *
      * @param fullInput The full user input string.
      * @return The description of the todo task.
      * @throws MonetException If the description is empty.
      */
-    public static String parseTodo(String fullInput) throws MonetException {
+    public static Object[] parseTodo(String fullInput) throws MonetException {
         // Splits the input into 2 parts: the command word and the rest of the string.
         // The limit '2' ensures the description, which may contain spaces, is kept as one part.
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new MonetException("The description for a todo cannot be empty.");
         }
-        return parts[1];
+
+        String content = parts[1];
+        Pair<String, Priority> result = extractPriority(content);
+        return new Object[]{result.getKey(), result.getValue()};
     }
 
     /**
      * Parses the arguments for a "deadline" command.
-     * Expected format: "deadline <description> /by <yyyy-MM-dd HHmm>"
+     * Expected format: "deadline [description] /by [date] /p [level]"
      *
      * @param fullInput The full user input string.
      * @return A String array containing the description [0] and the deadline string [1].
      * @throws MonetException If the format is incorrect or parts are missing.
      */
-    public static String[] parseDeadline(String fullInput) throws MonetException {
+    public static Object[] parseDeadline(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new MonetException("The description for a deadline cannot be empty.");
         }
 
+        Pair<String, Priority> contentAndPriority = extractPriority(parts[1]);
+        String content = contentAndPriority.getKey();
+        Priority priority = contentAndPriority.getValue();
+
         // The description part is then split by the "/by" delimiter to separate content and date.
-        String[] deadlineParts = parts[1].split(" /by ", 2);
+        String[] deadlineParts = content.split(" /by ", 2);
         if (deadlineParts.length < 2 || deadlineParts[0].trim().isEmpty() || deadlineParts[1].trim().isEmpty()) {
             throw new MonetException("Invalid deadline format. Use: deadline <description> /by <date>");
         }
-        return deadlineParts;
+        return new Object[]{deadlineParts[0].trim(), deadlineParts[1].trim(), priority};
     }
 
     /**
      * Parses the arguments for an "event" command.
-     * Expected format: "event <description> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm>"
+     * Expected format: "event [description] /from [yyyy-MM-dd HHmm] /to [yyyy-MM-dd HHmm]"
      *
      * @param fullInput The full user input string.
      * @return A String array containing the description [0], from-time [1], and to-time [2].
      * @throws MonetException If the format is incorrect or parts are missing.
      */
-    public static String[] parseEvent(String fullInput) throws MonetException {
+    public static Object[] parseEvent(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             throw new MonetException("The description for an event cannot be empty.");
         }
 
-        String[] eventParts = parts[1].split(" /from ", 2);
+        Pair<String, Priority> contentAndPriority = extractPriority(parts[1]);
+        String content = contentAndPriority.getKey();
+        Priority priority = contentAndPriority.getValue();
+
+        String[] eventParts = content.split(" /from ", 2);
         if (eventParts.length < 2 || eventParts[0].trim().isEmpty() || eventParts[1].trim().isEmpty()) {
             throw new MonetException("Invalid event format. Use: event <description> /from <start> /to <end>");
         }
@@ -102,13 +142,12 @@ public class Parser {
             throw new MonetException("Invalid event format. Use: event <description> /from <start> /to <end>");
         }
 
-        // Return the three distinct parts: description, from-time, and to-time.
-        return new String[]{eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim()};
+        return new Object[]{eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim(), priority};
     }
 
     /**
      * Parses the keyword for a "find" command.
-     * Expected format: "find <keyword>"
+     * Expected format: "find [keyword]"
      *
      * @param fullInput The full user input string.
      * @return The keyword to search for.
@@ -148,6 +187,25 @@ public class Parser {
         } catch (NumberFormatException e) {
             // Catch cases where the user types e.g., "mark one" instead of "mark 1".
             throw new MonetException("Please enter a valid number for the task index.");
+        }
+    }
+
+    /**
+     * Parses the priority level from a "priority" command.
+     * @param fullInput The full user input (e.g., "priority 1").
+     * @return The Priority enum.
+     * @throws MonetException If the level is missing or not a number.
+     */
+    public static Priority parsePriorityLevel(String fullInput) throws MonetException {
+        String[] parts = fullInput.split(" ", 2);
+        if (parts.length < 2) {
+            throw new MonetException("Please specify a priority level (1=High, 2=Medium, 3=Low).");
+        }
+        try {
+            int level = Integer.parseInt(parts[1].trim());
+            return Priority.of(level);
+        } catch (NumberFormatException e) {
+            throw new MonetException("Priority level must be a number (1, 2, or 3).");
         }
     }
 }

@@ -75,15 +75,7 @@ public class Ui {
         if (tasks.getSize() == 0) {
             return "Your task list is empty. Add some tasks!";
         }
-        StringBuilder sb = new StringBuilder("Here are the tasks in your list:\n");
-        for (int i = 0; i < tasks.getSize(); i++) {
-            // Append a newline character for each task except the last one.
-            sb.append("  ").append(i + 1).append(".").append(tasks.getTask(i).toString());
-            if (i < tasks.getSize() - 1) {
-                sb.append("\n");
-            }
-        }
-        return sb.toString();
+        return formatTaskList("Here are the tasks in your list:", tasks);
     }
 
     /**
@@ -147,9 +139,32 @@ public class Ui {
         if (tasks.getSize() == 0) {
             return "No tasks matching your keyword were found.";
         }
-        StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
+        return formatTaskList("Here are the matching tasks in your list:", tasks);
+    }
+
+
+    /**
+     * Formats a list of tasks filtered by priority into a display-ready string.
+     *
+     * @param priority The priority level that was used for filtering, included in the message header.
+     * @param tasks The TaskList (presumably pre-filtered) containing the tasks to be displayed.
+     * @return A formatted string containing the list of tasks, or a 'not found' message.
+     */
+    public String showPriorityTaskList(Priority priority, TaskList tasks) {
+        if (tasks.getSize() == 0) {
+            return "No tasks found with " + priority.name() + " priority.";
+        }
+        // Formats and returns the full list of tasks.
+        return formatTaskList("Showing tasks with " + priority.name() + " priority:", tasks);
+    }
+
+    // Helper method to format the list of tasks
+    private String formatTaskList(String header, TaskList tasks) {
+        StringBuilder sb = new StringBuilder(header);
+        sb.append("\n");
         for (int i = 0; i < tasks.getSize(); i++) {
             sb.append("  ").append(i + 1).append(".").append(tasks.getTask(i).toString());
+            // Append a newline for each task except the last one
             if (i < tasks.getSize() - 1) {
                 sb.append("\n");
             }

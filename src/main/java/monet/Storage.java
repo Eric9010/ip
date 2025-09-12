@@ -85,17 +85,19 @@ public class Storage {
      * @throws MonetException if the line contains a known but malformed task.
      */
     private Task parseTaskFromFileString(String line) throws MonetException {
+        // Format: T | 0 | MEDIUM | read book
         String[] parts = line.split(" \\| ");
         String warning = "Warning: Corrupted line in data file will be ignored: ";
 
-        if (parts.length < 3) {
+        if (parts.length < 4) {
             System.out.println(warning + line);
             return null;
         }
 
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
-        String description = parts[2];
+        Priority priority = Priority.valueOf(parts[2]); // Convert string back to enum
+        String description = parts[3];
         Task task;
 
         // Use assert to validate the acceptable task types
@@ -103,26 +105,26 @@ public class Storage {
 
         switch (type) {
         case "T":
-            task = new Todo(description);
+            task = new Todo(description, priority);
             break;
         case "D":
             // Add specific validation for deadline format.
-            if (parts.length < 4) {
-                System.out.println(warning + line);
-                return null;
-            }
-            LocalDateTime by = LocalDateTime.parse(parts[3]);
-            task = new Deadline(description, by);
-            break;
-        case "E":
-            // Add specific validation for event format.
             if (parts.length < 5) {
                 System.out.println(warning + line);
                 return null;
             }
-            LocalDateTime from = LocalDateTime.parse(parts[3]);
-            LocalDateTime to = LocalDateTime.parse(parts[4]);
-            task = new Event(description, from, to);
+            LocalDateTime by = LocalDateTime.parse(parts[4]);
+            task = new Deadline(description, by, priority);
+            break;
+        case "E":
+            // Add specific validation for event format.
+            if (parts.length < 6) {
+                System.out.println(warning + line);
+                return null;
+            }
+            LocalDateTime from = LocalDateTime.parse(parts[4]);
+            LocalDateTime to = LocalDateTime.parse(parts[5]);
+            task = new Event(description, from, to, priority);
             break;
         default:
             // If the type is unknown, it's also a corrupted line.

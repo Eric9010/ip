@@ -22,10 +22,11 @@ public class Event extends Task {
      * @param description The description of the event.
      * @param fromString The start date/time string.
      * @param toString The end date/time string.
+     * @param priority The priority of the event.
      * @throws MonetException If any date/time string is in an invalid format.
      */
-    public Event(String description, String fromString, String toString) throws MonetException {
-        super(description);
+    public Event(String description, String fromString, String toString, Priority priority) throws MonetException {
+        super(description, priority);
         try {
             this.from = LocalDateTime.parse(fromString.trim(), INPUT_FORMATTER);
             this.to = LocalDateTime.parse(toString.trim(), INPUT_FORMATTER);
@@ -40,9 +41,10 @@ public class Event extends Task {
      * @param description The description of the event.
      * @param from The start time as a pre-parsed LocalDateTime object.
      * @param to The end time as a pre-parsed LocalDateTime object.
+     * @param priority The priority of the event.
      */
-    public Event(String description, LocalDateTime from, LocalDateTime to) {
-        super(description);
+    public Event(String description, LocalDateTime from, LocalDateTime to, Priority priority) {
+        super(description, priority);
         this.from = from;
         this.to = to;
     }
@@ -55,6 +57,7 @@ public class Event extends Task {
 
     @Override
     public String toFileString() {
-        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
+        return "E | " + (isDone ? "1" : "0") + " | " + priority.name()
+                + " | " + description + " | " + from + " | " + to;
     }
 }

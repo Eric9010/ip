@@ -21,10 +21,11 @@ public class Deadline extends Task {
      *
      * @param description The description of the deadline task.
      * @param byString The date/time string for the deadline.
+     * @param priority The priority of the deadline task.
      * @throws MonetException If the date/time string is in an invalid format.
      */
-    public Deadline(String description, String byString) throws MonetException {
-        super(description);
+    public Deadline(String description, String byString, Priority priority) throws MonetException {
+        super(description, priority);
         try {
             // Attempt to parse the user-provided date string.
             this.by = LocalDateTime.parse(byString.trim(), INPUT_FORMATTER);
@@ -39,9 +40,10 @@ public class Deadline extends Task {
      *
      * @param description The description of the deadline task.
      * @param by A pre-parsed LocalDateTime object.
+     * @param priority The priority of the deadline task.
      */
-    public Deadline(String description, LocalDateTime by) {
-        super(description);
+    public Deadline(String description, LocalDateTime by, Priority priority) {
+        super(description, priority);
         this.by = by;
     }
 
@@ -54,6 +56,6 @@ public class Deadline extends Task {
     @Override
     public String toFileString() {
         // Converts the task to a machine-readable string for saving to file.
-        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
+        return "D | " + (isDone ? "1" : "0") + " | " + priority.name() + " | " + description + " | " + by;
     }
 }

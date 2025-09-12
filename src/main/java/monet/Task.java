@@ -7,15 +7,27 @@ package monet;
 public abstract class Task {
     protected String description;
     protected boolean isDone;
+    protected Priority priority;
 
     /**
      * Constructs a general Task from user input.
      *
      * @param description The description of the task.
+     * @param priority The priority of the task.
      */
-    public Task(String description) {
+    public Task(String description, Priority priority) {
         this.description = description;
         this.isDone = false;
+        this.priority = priority;
+    }
+
+    /**
+     * Overloaded constructor that defaults to MEDIUM priority.
+     * @param description The description of the task.
+     */
+    public Task(String description) {
+        // By default, all tasks are created with MEDIUM priority unless specified.
+        this(description, Priority.MEDIUM);
     }
 
     public String getDescription() {
@@ -44,9 +56,21 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /**
+     * Returns a character representing the priority.
+     * @return 'H' for HIGH, 'M' for MEDIUM, 'L' for LOW.
+     */
+    public char getPriorityIcon() {
+        return this.priority.name().charAt(0);
+    }
+
+    public Priority getPriority() {
+        return this.priority;
+    }
+
     @Override
     public String toString() {
-        return "[" + this.getStatusIcon() + "] " + this.description;
+        return "[" + getPriorityIcon() + "]" + "[" + getStatusIcon() + "] " + this.description;
     }
 
     /**

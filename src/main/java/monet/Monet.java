@@ -60,6 +60,8 @@ public class Monet {
                 return handleAddTask(command, input);
             case FIND:
                 return handleFind(input);
+            case PRIORITY: // NEW: Handle the priority command
+                return handlePriority(input);
             default:
                 return "I don't know what that means. Please check your input!";
             }
@@ -82,20 +84,34 @@ public class Monet {
 
         // Parse the user input to create the correct task type.
         switch (command) {
-        case TODO:
-            newTask = new Todo(Parser.parseTodo(fullCommand));
+        case TODO: {
+            Object[] todoDetails = Parser.parseTodo(fullCommand);
+            String description = (String) todoDetails[0];
+            Priority priority = (Priority) todoDetails[1];
+            newTask = new Todo(description, priority);
             break;
-        case DEADLINE:
-            String[] deadlineDetails = Parser.parseDeadline(fullCommand);
-            newTask = new Deadline(deadlineDetails[0], deadlineDetails[1]);
-            break;
-        case EVENT:
-            String[] eventDetails = Parser.parseEvent(fullCommand);
-            newTask = new Event(eventDetails[0], eventDetails[1], eventDetails[2]);
-            break;
-        default:
-            return ""; // Should not happen
         }
+        case DEADLINE: {
+            Object[] deadlineDetails = Parser.parseDeadline(fullCommand);
+            String description = (String) deadlineDetails[0];
+            String byString = (String) deadlineDetails[1];
+            Priority priority = (Priority) deadlineDetails[2];
+            newTask = new Deadline(description, byString, priority);
+            break;
+        }
+        case EVENT: {
+            Object[] eventDetails = Parser.parseEvent(fullCommand);
+            String description = (String) eventDetails[0];
+            String fromString = (String) eventDetails[1];
+            String toString = (String) eventDetails[2];
+            Priority priority = (Priority) eventDetails[3];
+            newTask = new Event(description, fromString, toString, priority);
+            break;
+        }
+        default:
+            throw new MonetException("Invalid task type for adding.");
+        }
+
 
         tasks.addTask(newTask); // Execute the action: Add the task to the list.
         storage.save(tasks.getTasks()); // Save the updated list to disk.
@@ -152,5 +168,19 @@ public class Monet {
         String keyword = Parser.parseFind(fullCommand);
         TaskList foundTasks = tasks.findTasks(keyword);
         return ui.getFoundTasksMessage(foundTasks);
+    }
+
+    /**
+     * Parses the user input for the 'priority' command, filters the task list,
+     * and returns a formatted string of the results.
+     *
+     * @param fullCommand The full user input string (e.g., "priority 1").
+     * @return A string containing the list of tasks with the specified priority.
+     * @throws MonetException If the priority level is invalid.
+     */
+    private String handlePriority(String fullCommand) throws MonetException {
+        Priority priority = Parser.parsePriorityLevel(fullCommand);
+        TaskList filteredTasks = tasks.filterByPriority(priority);
+        return ui.showPriorityTaskList(priority, filteredTasks); // Assumes you added this to Ui
     }
 }

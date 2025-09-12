@@ -13,5 +13,6 @@ public enum Command {
     EVENT,
     BYE,
     FIND,
+    PRIORITY,
     UNKNOWN // Represents an invalid command
 }

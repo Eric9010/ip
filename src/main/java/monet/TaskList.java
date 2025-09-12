@@ -75,4 +75,18 @@ public class TaskList {
         return new TaskList(foundTasksList);
     }
 
+    /**
+     * Filters the current task list to find tasks of a specific priority level.
+     * The original list is not modified.
+     *
+     * @param priority The priority level (e.g., HIGH, MEDIUM, LOW) to filter tasks by.
+     * @return A new TaskList containing only the tasks that match the specified priority.
+     */
+    public TaskList filterByPriority(Priority priority) {
+        ArrayList<Task> foundTasksList = this.tasks.stream()
+                .filter(task -> task.getPriority() == priority)
+                .collect(Collectors.toCollection(ArrayList::new));
+        return new TaskList(foundTasksList);
+    }
+
 }
