@@ -10,6 +10,19 @@ import java.util.Scanner;
 
 /**
  * Handles loading tasks from and saving tasks to a file.
+ *
+ * The storage format is a plain text file where each line represents one task,
+ * with fields separated by " | ".
+ *
+ * Format Details:
+ * - Todo:      T | [Status] | [Priority] | [Description]
+ * - Deadline:  D | [Status] | [Priority] | [Description] | [ByDateTime]
+ * - Event:     E | [Status] | [Priority] | [Description] | [FromDateTime] | [ToDateTime]
+ *
+ * Where:
+ * - [Status] is '1' for done, '0' for not done.
+ * - [Priority] is one of 'HIGH', 'MEDIUM', 'LOW'.
+ * - DateTimes are stored in ISO 8601 format (e.g., 2025-09-12T18:00).
  */
 public class Storage {
     private final String filePath;

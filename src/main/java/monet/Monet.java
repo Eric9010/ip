@@ -119,10 +119,14 @@ public class Monet {
     }
 
     /**
-     * Parses the user input for a task index to delete, removes the task,
-     * shows a confirmation, and saves the changes.
+     * Handles the entire workflow for deleting a task.
+     * This involves three steps:
+     * 1. Parsing the user input to get the task index.
+     * 2. Executing the deletion on the TaskList.
+     * 3. Saving the updated TaskList to storage.
      *
      * @param fullCommand The full user input string (e.g., "delete 2").
+     * @return A formatted confirmation message from the Ui.
      * @throws MonetException If the user input is in an invalid format.
      * @throws IOException If there is an error saving the tasks to the file.
      */
