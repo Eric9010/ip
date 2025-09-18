@@ -57,6 +57,15 @@ shadowJar {
     archiveClassifier = null
 }
 
+sourceSets {
+    main {
+        resources {
+            // This line tells Gradle to treat everything in this directory as a resource.
+            srcDirs = ["src/main/resources"]
+        }
+    }
+}
+
 run{
     standardInput = System.in
 }
