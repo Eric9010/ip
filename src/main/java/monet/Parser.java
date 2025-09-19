@@ -42,13 +42,6 @@ public class Parser {
         }
     }
 
-    /**
-     * A private helper method to find and extract the priority flag from a command's content.
-     *
-     * @param content The part of the user command after the main command word.
-     * @return A Pair containing the content with the priority flag removed, and the parsed Priority.
-     * @throws MonetException If the priority level is not a valid number.
-     */
     private static Pair<String, Priority> extractPriority(String content) throws MonetException {
         // Splits the content by the "/p" flag.
         String[] parts = content.split(" /p ");

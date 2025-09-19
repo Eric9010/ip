@@ -49,11 +49,10 @@ checkstyle {
 
 application {
     mainClass.set("monet.Launcher")
-    // mainClass.set("seedu.duke.Duke")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "monet"
     archiveClassifier = null
 }
 
