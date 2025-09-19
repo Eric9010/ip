@@ -6,13 +6,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monet.gui.MainWindow">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1000.0" prefWidth="1000.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="monet.gui.MainWindow">
     <children>
         <TextField fx:id="userInput" layoutY="558.0" onAction="#handleUserInput" prefHeight="40.0" prefWidth="880.0" AnchorPane.bottomAnchor="1.0" />
-        <Button fx:id="sendButton" layoutX="880.0" layoutY="759.0" mnemonicParsing="false" onAction="#handleUserInput" prefHeight="40.0" prefWidth="120.0" text="Send" />
-        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" hvalue="1.0" prefHeight="760.0" prefWidth="1000.0" vvalue="1.0">
+        <Button fx:id="sendButton" layoutX="880.0" layoutY="960.0" mnemonicParsing="false" onAction="#handleUserInput" prefHeight="40.0" prefWidth="120.0" text="Send" />
+        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" hvalue="1.0" prefHeight="960.0" prefWidth="1000.0" vvalue="1.0">
             <content>
-                <VBox fx:id="dialogContainer" prefHeight="760.0" prefWidth="1000.0" />
+                <VBox fx:id="dialogContainer" prefHeight="960.0" prefWidth="1000.0" />
             </content>
         </ScrollPane>
     </children>
