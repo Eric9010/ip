@@ -8,7 +8,7 @@ and beautiful art.
 ### Quick Start
 
 1.  Download the `monet.jar` file from the project's 
-[releases page](https://www.google.com/search?q=https://github.com/Eric9010/ip/releases).
+    [releases page](https://www.google.com/search?q=https://github.com/Eric9010/ip/releases).
 2.  Place the JAR file in an empty folder.
 3.  Open a command prompt or terminal in that folder.
 4.  Run the application with the following command:

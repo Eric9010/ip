@@ -1,26 +1,132 @@
-# monet.Monet project template
+# Monet User Guide 🤖🎨
 
-This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
+Welcome to **Monet**\! Monet is a personal assistant chatbot that helps you manage your tasks, deadlines, and events
+directly from the command line.
+Its clean, text-based interface is designed for speed and efficiency, accompanied by a host of helpful features
+and beautiful art.
 
-## Setting up in Intellij
+### Quick Start
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+1.  Download the `monet.jar` file from the project's
+    [releases page](https://www.google.com/search?q=https://github.com/Eric9010/ip/releases).
+2.  Place the JAR file in an empty folder.
+3.  Open a command prompt or terminal in that folder.
+4.  Run the application with the following command:
+    ```
+    java -jar "monet.jar"
+    ```
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-1. After that, locate the `src/main/java/monet.Monet.java` file, right-click it, and choose `Run monet.Monet.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+-----
 
-**Warning:** Keep the `src\main\java` folder as the root folder for Java files (i.e., don't rename those folders or move Java files to another folder outside of this folder path), as this is the default location some tools (e.g., Gradle) expect to find Java files.
+## Features and Commands
+
+Monet understands a variety of commands to help you manage your tasks.
+
+### Adding a Task
+
+You can add three types of tasks: **To-Dos**, **Deadlines**, and **Events**.
+You can also assign a priority to any task when you create it.
+
+**A Note on Priority:**
+You can optionally set a priority for any new task using the `/p <level>` flag at the end of the command.
+
+* `/p 1`: **High** Priority
+* `/p 2`: **Medium** Priority
+* `/p 3`: **Low** Priority
+
+If you don't specify a priority, it will default to **Medium**.
+
+#### **`todo`**
+
+Adds a simple to-do task that doesn't have a specific date or time.
+
+* **Format:** `todo <description> [/p <level>]`
+* **Example:** `todo read book /p 3`
+
+#### **`deadline`**
+
+Adds a task that needs to be done before a specific date and time.
+
+* **Format:** `deadline <description> /by <yyyy-MM-dd HHmm> [/p <level>]`
+* **Example:** `deadline submit report /by 2025-10-15 2359 /p 1`
+
+#### **`event`**
+
+Adds a task that has a specific start and end time.
+
+* **Format:** `event <description> /from <yyyy-MM-dd HHmm> /to <yyyy-MM-dd HHmm> [/p <level>]`
+* **Example:** `event team meeting /from 2025-09-15 1400 /to 2025-09-15 1600 /p 1`
+
+-----
+
+### Managing Your Tasks
+
+These commands help you view and modify your existing tasks.
+
+#### **`list`**
+
+Displays all the tasks currently in your list.
+
+* **Format:** `list`
+* **Example:** `list`
+
+#### **`mark` and `unmark`**
+
+Mark a task as complete or incomplete. The `<task_number>` corresponds to the number shown in the `list` command.
+
+* **Format:** `mark <task_number>` or `unmark <task_number>`
+* **Example:** `mark 2`
+
+#### **`delete`**
+
+Removes a task from your list permanently.
+
+* **Format:** `delete <task_number>`
+* **Example:** `delete 3`
+
+-----
+
+### Finding Tasks
+
+If your list gets long, you can search for tasks by keyword or filter them by priority.
+
+#### **`find`**
+
+Searches for all tasks whose description contains a specific keyword.
+
+* **Format:** `find <keyword>`
+* **Example:** `find book`
+
+#### **`priority`**
+
+Displays all tasks that match a given priority level.
+
+* **Format:** `priority <level>` (1=High, 2=Medium, 3=Low)
+* **Example:** `priority 1`
+
+-----
+
+### Exiting the Program
+
+#### **`bye`**
+
+Exits the Monet chatbot.
+
+-----
+
+## Command Summary
+
+Here is a quick reference table for all available commands:
+
+| Command | Format | Example |
+| :--- | :--- | :--- |
+| `todo` | `todo <description> [/p <level>]` | `todo read book /p 3` |
+| `deadline` | `deadline <desc> /by <date> [/p <level>]` | `deadline return book /by 2025-12-02 1800` |
+| `event` | `event <desc> /from <date> /to <date> [/p <level>]`| `event project meeting /from 2025-09-15 1400 /to 1600 /p 1` |
+| `list` | `list` | `list` |
+| `mark` | `mark <task_number>` | `mark 1` |
+| `unmark` | `unmark <task_number>` | `unmark 2` |
+| `delete` | `delete <task_number>` | `delete 1` |
+| `find` | `find <keyword>` | `find report` |
+| `priority` | `priority <level>` | `priority 1` |
+| `bye` | `bye` | `bye` |
