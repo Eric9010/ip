@@ -31,7 +31,7 @@ public class Deadline extends Task {
             this.by = LocalDateTime.parse(byString.trim(), INPUT_FORMATTER);
         } catch (DateTimeParseException e) {
             // If parsing fails, throw a custom exception with a relevant message.
-            throw new MonetException("Invalid date format for deadline. Please use 'yyyy-MM-dd HHmm'.");
+            throw new MonetException("Invalid date format f'r deadline.  Prithee useth 'yyyy-MM-dd HHmm'.");
         }
     }
 

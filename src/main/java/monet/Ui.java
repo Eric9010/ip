@@ -45,7 +45,7 @@ public class Ui {
         // Refactored: Uses the varargs helper for cleaner code.
         return formatMessages(
                 "Hello! I'm Monet",
-                "What can I do for you?"
+                "What can i doth f'r thee?"
         );
     }
 
@@ -54,7 +54,7 @@ public class Ui {
      * @return A goodbye string.
      */
     public String getGoodbyeMessage() {
-        return "Bye. Hope to see you again soon!";
+        return "Au revoir!";
     }
 
     /**
@@ -63,7 +63,7 @@ public class Ui {
      * @return A formatted error string.
      */
     public String getErrorMessage(String message) {
-        return "Sorry! " + message;
+        return "Alas! " + message;
     }
 
     /**
@@ -73,9 +73,9 @@ public class Ui {
      */
     public String getTaskListMessage(TaskList tasks) {
         if (tasks.getSize() == 0) {
-            return "Your task list is empty. Add some tasks!";
+            return "Thy task listeth is barren. Addeth some tasks!";
         }
-        return formatTaskList("Here are the tasks in your list:", tasks);
+        return formatTaskList("H're art the tasks in thy listeth:", tasks);
     }
 
     /**
@@ -86,9 +86,9 @@ public class Ui {
      */
     public String getTaskAddedMessage(Task task, int taskCount) {
         return formatMessages(
-                "Got it. I've added this task:",
+                "Ay. I has't did add this task:",
                 "   " + task,
-                "Now you have " + taskCount + " tasks in the list."
+                "Anon thee has't " + taskCount + " tasks in thy listeth."
         );
     }
 
@@ -100,9 +100,9 @@ public class Ui {
      */
     public String getTaskDeletedMessage(Task task, int taskCount) {
         return formatMessages(
-                "Noted. I've removed this task:",
+                "Ay. I've did remove this task:",
                 "   " + task,
-                "Now you have " + taskCount + " tasks in the list."
+                "Anon thee has't " + taskCount + " tasks in thy listeth."
         );
     }
 
@@ -113,7 +113,7 @@ public class Ui {
      */
     public String getTaskMarkedMessage(Task task) {
         return formatMessages(
-                "Nice! I've marked this task as done:",
+                "That's good that's gone! I've did mark this task as done:",
                 "   " + task
         );
     }
@@ -125,7 +125,7 @@ public class Ui {
      */
     public String getTaskUnmarkedMessage(Task task) {
         return formatMessages(
-                "OK, I've marked this task as not done yet:",
+                "'Tis agreed, I've unmark'd this task:",
                 "   " + task
         );
     }
@@ -137,9 +137,9 @@ public class Ui {
      */
     public String getFoundTasksMessage(TaskList tasks) {
         if (tasks.getSize() == 0) {
-            return "No tasks matching your keyword were found.";
+            return "Nay matching tasks w're hath found.";
         }
-        return formatTaskList("Here are the matching tasks in your list:", tasks);
+        return formatTaskList("H're art the matching tasks in thy listeth:", tasks);
     }
 
 
@@ -152,7 +152,7 @@ public class Ui {
      */
     public String showPriorityTaskList(Priority priority, TaskList tasks) {
         if (tasks.getSize() == 0) {
-            return "No tasks found with " + priority.name() + " priority.";
+            return "Nay tasks hath found with " + priority.name() + " priority.";
         }
         // Formats and returns the full list of tasks.
         return formatTaskList("Showing tasks with " + priority.name() + " priority:", tasks);

@@ -63,7 +63,7 @@ public class Monet {
             case PRIORITY: // NEW: Handle the priority command
                 return handlePriority(input);
             default:
-                return "I don't know what that means. Please check your input!";
+                return "I knoweth not what yond means.  Prithee checketh thy did input!";
             }
         } catch (MonetException | IOException e) {
             return ui.getErrorMessage(e.getMessage());
@@ -109,9 +109,8 @@ public class Monet {
             break;
         }
         default:
-            throw new MonetException("Invalid task type for adding.");
+            throw new MonetException("Invalid task typeth f'r adding.");
         }
-
 
         tasks.addTask(newTask); // Execute the action: Add the task to the list.
         storage.save(tasks.getTasks()); // Save the updated list to disk.

@@ -63,7 +63,7 @@ public class Storage {
             }
         } catch (FileNotFoundException e) {
             // Catch cases where the file is not found, returns an empty list instead.
-            System.out.println("File not found, will be created on first save.");
+            System.out.println("Fileth not hath found, shall beest did create on first saveth.");
         }
         return loadedTasks;
     }
@@ -100,7 +100,7 @@ public class Storage {
     private Task parseTaskFromFileString(String line) throws MonetException {
         // Format: T | 0 | MEDIUM | read book
         String[] parts = line.split(" \\| ");
-        String warning = "Warning: Corrupted line in data file will be ignored: ";
+        String warning = "Warning: Corrupted line in data fileth shall be ignored: ";
 
         if (parts.length < 4) {
             System.out.println(warning + line);
@@ -114,7 +114,7 @@ public class Storage {
         Task task;
 
         // Use assert to validate the acceptable task types
-        assert type.equals("T") || type.equals("D") || type.equals("E") : "Unknown task type in file";
+        assert type.equals("T") || type.equals("D") || type.equals("E") : "Unknown task typeth in fileth";
 
         switch (type) {
         case "T":

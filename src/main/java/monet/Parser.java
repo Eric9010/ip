@@ -99,7 +99,7 @@ public class Parser {
     public static Object[] parseDeadline(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MonetException("The description for a deadline cannot be empty.");
+            throw new MonetException("The description f'r a deadline cannot beest barren.");
         }
 
         Pair<String, Priority> contentAndPriority = extractPriority(parts[1]);
@@ -109,7 +109,7 @@ public class Parser {
         // The description part is then split by the "/by" delimiter to separate content and date.
         String[] deadlineParts = content.split(" /by ", 2);
         if (deadlineParts.length < 2 || deadlineParts[0].trim().isEmpty() || deadlineParts[1].trim().isEmpty()) {
-            throw new MonetException("Invalid deadline format. Use: deadline <description> /by <date>");
+            throw new MonetException("Invalid format. Prithee useth: deadline <description> /by <date>");
         }
         return new Object[]{deadlineParts[0].trim(), deadlineParts[1].trim(), priority};
     }
@@ -125,7 +125,7 @@ public class Parser {
     public static Object[] parseEvent(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MonetException("The description for an event cannot be empty.");
+            throw new MonetException("The description f'r an event cannot beest barren.");
         }
 
         Pair<String, Priority> contentAndPriority = extractPriority(parts[1]);
@@ -134,12 +134,12 @@ public class Parser {
 
         String[] eventParts = content.split(" /from ", 2);
         if (eventParts.length < 2 || eventParts[0].trim().isEmpty() || eventParts[1].trim().isEmpty()) {
-            throw new MonetException("Invalid event format. Use: event <description> /from <start> /to <end>");
+            throw new MonetException("Invalid format. Prithee useth: event <description> /from <start> /to <end>");
         }
 
         String[] timeParts = eventParts[1].split(" /to ", 2);
         if (timeParts.length < 2 || timeParts[0].trim().isEmpty() || timeParts[1].trim().isEmpty()) {
-            throw new MonetException("Invalid event format. Use: event <description> /from <start> /to <end>");
+            throw new MonetException("Invalid format. Prithee useth: event <description> /from <start> /to <end>");
         }
 
         return new Object[]{eventParts[0].trim(), timeParts[0].trim(), timeParts[1].trim(), priority};
@@ -156,7 +156,7 @@ public class Parser {
     public static String parseFind(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MonetException("Please enter a keyword to find.");
+            throw new MonetException("Prithee ent'r a keyword to findeth.");
         }
         return parts[1].trim();
     }
@@ -173,7 +173,7 @@ public class Parser {
     public static int parseIndex(String fullInput, int listSize) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            throw new MonetException("Please specify the task number.");
+            throw new MonetException("Prithee specifyeth the task number.");
         }
         try {
             // Convert the user-provided 1-based index to a 0-based index for the ArrayList.
@@ -181,12 +181,12 @@ public class Parser {
 
             // Validate that the index is within the bounds of the current task list size.
             if (index < 0 || index >= listSize) {
-                throw new MonetException("monet.Task number not found. Please provide a valid task number.");
+                throw new MonetException("Task number not hath found.  Prithee provideth a valid task number");
             }
             return index;
         } catch (NumberFormatException e) {
             // Catch cases where the user types e.g., "mark one" instead of "mark 1".
-            throw new MonetException("Please enter a valid number for the task index.");
+            throw new MonetException("Prithee ent'r a valid number f'r the task index");
         }
     }
 
@@ -199,13 +199,13 @@ public class Parser {
     public static Priority parsePriorityLevel(String fullInput) throws MonetException {
         String[] parts = fullInput.split(" ", 2);
         if (parts.length < 2) {
-            throw new MonetException("Please specify a priority level (1=High, 2=Medium, 3=Low).");
+            throw new MonetException("Prithee specifyeth a priority leveleth (1=High, 2=Medium, 3=Low).");
         }
         try {
             int level = Integer.parseInt(parts[1].trim());
             return Priority.of(level);
         } catch (NumberFormatException e) {
-            throw new MonetException("Priority level must be a number (1, 2, or 3).");
+            throw new MonetException("Priority leveleth might not but beest a number (1, 2, or 3).");
         }
     }
 }

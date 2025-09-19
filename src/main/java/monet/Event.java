@@ -31,7 +31,7 @@ public class Event extends Task {
             this.from = LocalDateTime.parse(fromString.trim(), INPUT_FORMATTER);
             this.to = LocalDateTime.parse(toString.trim(), INPUT_FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new MonetException("Invalid date format for event. Please use 'yyyy-MM-dd HHmm'.");
+            throw new MonetException("Invalid date format f'r event. Prithee useth 'yyyy-MM-dd HHmm'.");
         }
     }
 

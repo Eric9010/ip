@@ -9,9 +9,9 @@
 /* Style for the chat bubble container */
 .dialog-box {
     /* Semi-transparent off-white background */
-    -fx-background-color: rgba(240, 240, 240, 0.80); /* 85% opaque white */
+    -fx-background-color: rgba(240, 240, 240, 0.85); /* 85% opaque white */
     -fx-background-radius: 10px;
-    -fx-padding: 10px;
+    -fx-padding: 0px;
 }
 
 /* Style for the text label inside the chat bubble */
